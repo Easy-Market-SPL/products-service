@@ -11,11 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
-    private String code;
+public class VariantDTO {
+    private Integer id;
     private String name;
-    private String description;
-    private Float price;
-    private String imgUrl;
-    private List<LabelDTO> labels;
+    private List<VariantOptionDTO> options;
 }

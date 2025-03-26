@@ -1,5 +1,9 @@
 package co.edu.javeriana.easymarket.productsservice.model;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +25,13 @@ public class Label {
     @Column(name = "description", length = 45)
     private String description;
 
+    @OneToMany(mappedBy = "labelIdLabel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LabelProduct> labelProducts = new HashSet<>();
+
+    // Helper method to get all Products
+    public Set<Product> getProducts() {
+        return labelProducts.stream()
+            .map(LabelProduct::getProductCode)
+            .collect(Collectors.toSet());
+    }
 }

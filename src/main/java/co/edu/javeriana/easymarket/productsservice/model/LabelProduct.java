@@ -21,6 +21,6 @@ public class LabelProduct {
     @MapsId("productCode")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_code", nullable = false)
-    private co.edu.javeriana.easymarket.productsservice.model.Product productCode;
+    private Product productCode;
 
 }

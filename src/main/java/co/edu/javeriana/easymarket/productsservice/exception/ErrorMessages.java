@@ -25,4 +25,24 @@ public class ErrorMessages {
         }
     }
 
+    public static class LabelErrorMessages {
+        public static String notFound(Integer id) {
+            return String.format("Label with id %d not found", id);
+        }
+        
+        public static String invalidData() {
+            return "Invalid label data";
+        }
+        
+        public static String failedToDelete(Integer id) {
+            return String.format("Failed to delete label with id %d", id);
+        }
+    }
+
+    public static class VariantsErrorMesages{
+        public static String emptyOptions() {
+            return String.format("A variant must have at least one option");
+        }
+    }
+
 }
