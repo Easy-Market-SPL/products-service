@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.javeriana.easymarket.productsservice.dtos.ColorDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.LabelDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.ProductDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.VariantDTO;
@@ -45,6 +46,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductVariants(code));
     }
 
+    @GetMapping("/{code}/colors")
+    public ResponseEntity<List<ColorDTO>> getProductColors(@PathVariable String code) {
+        return ResponseEntity.ok(productService.getProductColors(code));
+    }
+
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
         ProductDTO createdProduct = productService.createProduct(product);
@@ -64,10 +70,17 @@ public class ProductController {
 
     @PutMapping("/{code}/variants")
     public ResponseEntity<List<VariantDTO>> updateProductVariants(
-        @PathVariable String code,
-        @RequestBody List<VariantDTO> variantDTOs) {
-    return ResponseEntity.ok(productService.updateProductVariants(code, variantDTOs));
-}
+            @PathVariable String code,
+            @RequestBody List<VariantDTO> variantDTOs) {
+        return ResponseEntity.ok(productService.updateProductVariants(code, variantDTOs));
+    }
+
+    @PutMapping("/{code}/colors")
+    public ResponseEntity<List<ColorDTO>> updateProductColors(
+            @PathVariable String code,
+            @RequestBody List<ColorDTO> colorDTOs) {
+        return ResponseEntity.ok(productService.updateProductColors(code, colorDTOs));
+    }
 
     @DeleteMapping("/{code}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String code) {

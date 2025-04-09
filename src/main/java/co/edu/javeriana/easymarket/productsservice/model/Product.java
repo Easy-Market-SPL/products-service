@@ -44,6 +44,9 @@ public class Product {
 
     @OneToMany(mappedBy = "productCode", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Variant> variants = new HashSet<>();
+
+    @OneToMany(mappedBy = "productCode", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductColor> productColors = new HashSet<>();
     
     // Helper method to get all Labels
     public Set<Label> getLabels() {
@@ -54,6 +57,12 @@ public class Product {
 
     public Set<Variant> getVariants() {
         return variants;
+    }
+
+    public Set<Color> getColors() {
+        return productColors.stream()
+            .map(ProductColor::getIdColor)
+            .collect(Collectors.toSet());
     }
 
     public void updateLabels(Set<Label> newLabels) {
@@ -106,4 +115,32 @@ public class Product {
         variants.add(variant);
     }
 
+    public void addColor(Color color) {
+        ProductColor productColor = new ProductColor();
+        
+        // Create composite id
+        ProductColorId id = new ProductColorId();
+        id.setIdColor(color.getIdColor());
+        id.setProductCode(this.code);
+        
+        // Set up relationship
+        productColor.setId(id);
+        productColor.setIdColor(color);
+        productColor.setProductCode(this);
+        
+        this.productColors.add(productColor);
+    }
+    
+    // Helper method to update all colors
+    public void updateColors(Set<Color> newColors) {
+        // Clear existing relationships
+        productColors.clear();
+        
+        // Add new relationships
+        if (newColors != null) {
+            for (Color color : newColors) {
+                addColor(color);
+            }
+        }
+    }
 }
