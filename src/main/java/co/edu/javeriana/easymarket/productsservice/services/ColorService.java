@@ -36,6 +36,8 @@ public class ColorService {
     
     public ColorDTO createColor(ColorDTO colorDTO) {
         validateColorData(colorDTO);
+
+        colorDTO.setIdColor(null);
         
         Color color = colorMapper.colorDTOToColor(colorDTO);
         Color savedColor = colorRepository.save(color);
