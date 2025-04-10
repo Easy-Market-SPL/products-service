@@ -26,10 +26,12 @@ import lombok.AllArgsConstructor;
 public class ProductController {
     private final ProductService productService;
 
+
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
+
 
     @GetMapping("/{code}")
     public ResponseEntity<ProductDTO> getProductByCode(@PathVariable String code) {
@@ -56,6 +58,7 @@ public class ProductController {
         ProductDTO createdProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
+
 
     @PutMapping("/{code}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable String code, @RequestBody ProductDTO product) {

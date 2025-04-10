@@ -39,7 +39,7 @@ public class ErrorMessages {
         }
     }
 
-    public static class VariantsErrorMesages{
+    public static class VariantsErrorMessages{
         public static String emptyOptions() {
             return String.format("A variant must have at least one option");
         }

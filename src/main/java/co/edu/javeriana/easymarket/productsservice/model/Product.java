@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import co.edu.javeriana.easymarket.productsservice.exception.ErrorMessages;
 import co.edu.javeriana.easymarket.productsservice.exception.businessexceptions.BadRequestException;
 import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -88,7 +89,7 @@ public class Product {
                     addVariant(variant);
                 }
                 else {
-                    throw new BadRequestException(ErrorMessages.VariantsErrorMesages.emptyOptions());
+                    throw new BadRequestException(ErrorMessages.VariantsErrorMessages.emptyOptions());
                 }
             }
         }
