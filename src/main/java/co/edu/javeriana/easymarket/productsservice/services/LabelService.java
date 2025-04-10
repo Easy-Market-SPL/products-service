@@ -41,7 +41,7 @@ public class LabelService {
     public LabelDTO createLabel(LabelDTO labelDTO) {
         validateLabelData(labelDTO);
         
-        labelDTO.setId(null);
+        // No need to validate existence for creation since ID is auto-generated
         
         Label label = labelMapper.labelDTOToLabel(labelDTO);
         Label savedLabel = labelRepository.save(label);

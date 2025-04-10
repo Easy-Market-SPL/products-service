@@ -4,22 +4,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import co.edu.javeriana.easymarket.productsservice.model.Color;
 import co.edu.javeriana.easymarket.productsservice.model.Label;
 import co.edu.javeriana.easymarket.productsservice.model.Product;
 import co.edu.javeriana.easymarket.productsservice.model.Variant;
 import co.edu.javeriana.easymarket.productsservice.model.VariantOption;
+import co.edu.javeriana.easymarket.productsservice.repository.ColorRepository;
 import co.edu.javeriana.easymarket.productsservice.repository.LabelRepository;
 import co.edu.javeriana.easymarket.productsservice.repository.ProductRepository;
 import co.edu.javeriana.easymarket.productsservice.repository.VariantRepository;
 
 import org.springframework.stereotype.Service;
 
+import co.edu.javeriana.easymarket.productsservice.dtos.ColorDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.LabelDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.ProductDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.VariantDTO;
 import co.edu.javeriana.easymarket.productsservice.dtos.VariantOptionDTO;
 import co.edu.javeriana.easymarket.productsservice.exception.ErrorMessages;
 import co.edu.javeriana.easymarket.productsservice.exception.businessexceptions.BadRequestException;
+import co.edu.javeriana.easymarket.productsservice.mappers.ColorMapper;
 import co.edu.javeriana.easymarket.productsservice.mappers.LabelMapper;
 import co.edu.javeriana.easymarket.productsservice.mappers.ProductMapper;
 import co.edu.javeriana.easymarket.productsservice.mappers.VariantMapper;
@@ -32,9 +36,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final LabelRepository labelRepository;
     private final VariantRepository variantRepository;
+    private final ColorRepository colorRepository;
     private final ProductMapper productMapper;
     private final LabelMapper labelMapper;
     private final VariantMapper variantMapper;
+    private final ColorMapper colorMapper;
     private final ValidationService validationService;
 
     public List<ProductDTO> getAllProducts() {
@@ -62,6 +68,12 @@ public class ProductService {
         return product.getVariants().stream()
                 .map(variant -> variantMapper.variantToVariantDTO(variant))
                 .collect(Collectors.toList());
+    }
+
+    public List<ColorDTO> getProductColors(String productCode) {
+        Product product = findProductByCode(productCode);
+        
+        return colorMapper.colorsToColorDTOs(product.getColors());
     }
 
     public ProductDTO createProduct(ProductDTO productDTO) {
@@ -130,7 +142,7 @@ public class ProductService {
                         VariantOption option = new VariantOption();
                         option.setName(optionDTO.getName());
                         option.setImgUrl(optionDTO.getImgUrl());
-                        option.setVariantIdVariant(variant);  // This is the key line
+                        option.setVariantIdVariant(variant);
                         variant.getOptions().add(option);
                     }
                 }
@@ -142,6 +154,23 @@ public class ProductService {
 
         // Convert back to DTOs for response
         return variantMapper.variantsToVariantDTOs(savedProduct.getVariants());
+    }
+
+    public List<ColorDTO> updateProductColors(String productCode, List<ColorDTO> colorDTOs) {
+        Product product = findProductByCode(productCode);
+        
+        Set<Color> newColors = colorDTOs.stream()
+                .map(colorDTO -> validationService.validateExists(
+                        colorRepository.findById(colorDTO.getIdColor()),
+                        ErrorMessages.ColorErrorMessages.notFound(colorDTO.getIdColor())))
+                .collect(Collectors.toSet());
+
+        // This handles all the relationship updates
+        product.updateColors(newColors);
+        
+        productRepository.save(product);
+
+        return colorMapper.colorsToColorDTOs(product.getColors());
     }
     
     public void deleteProduct(String code) {
@@ -169,5 +198,4 @@ public class ProductService {
             productRepository.findByCode(code),
             ErrorMessages.ProductErrorMessages.notFound(code));
     }
-
 }
