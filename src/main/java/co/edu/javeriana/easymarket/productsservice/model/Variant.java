@@ -1,5 +1,8 @@
 package co.edu.javeriana.easymarket.productsservice.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +24,18 @@ public class Variant {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_code", nullable = false)
     private Product productCode;
+
+    @OneToMany(mappedBy = "variantIdVariant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VariantOption> options = new HashSet<>();
+
+    public void addOption(VariantOption option) {
+        option.setVariantIdVariant(this);
+        options.add(option);
+    }
+    
+    public void removeOption(VariantOption option) {
+        options.remove(option);
+        option.setVariantIdVariant(null);
+    }
 
 }
